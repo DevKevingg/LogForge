@@ -1,10 +1,11 @@
 package codes.kevinhenriquez.logforge.format;
 
 import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
-import codes.kevinhenriquez.logforge.utils.AnsiColor;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+
+import static codes.kevinhenriquez.logforge.utils.AnsiColor.*;
 
 /*
  * © 2026 ComandaGo. All rights reserved.
@@ -28,12 +29,13 @@ public class LogFormatter {
         return color(level)
                 + icon(level)
                 + " "
+                + BOLD
                 + padding(level.name())
-                + AnsiColor.RESET
+                + RESET
                 + " "
-                + AnsiColor.GRAY
+                + GRAY
                 + time
-                +  AnsiColor.RESET
+                + RESET
                 + " "
                 + message;
     }
@@ -51,12 +53,12 @@ public class LogFormatter {
 
     private String color(LogLevelEnum level) {
         return switch (level) {
-            case INFO -> AnsiColor.BLUE;
-            case SUCCESS -> AnsiColor.GREEN;
-            case WARNING -> AnsiColor.YELLOW;
-            case ERROR -> AnsiColor.RED;
-            case DEBUG -> AnsiColor.GRAY;
-            case API -> AnsiColor.CYAN;
+            case INFO -> BRIGHT_BLUE;
+            case SUCCESS -> BRIGHT_GREEN;
+            case WARNING -> BRIGHT_YELLOW;
+            case ERROR -> BRIGHT_RED;
+            case DEBUG -> GRAY;
+            case API -> BRIGHT_CYAN;
         };
     }
 

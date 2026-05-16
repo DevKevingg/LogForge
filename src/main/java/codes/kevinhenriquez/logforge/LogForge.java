@@ -5,6 +5,9 @@ import codes.kevinhenriquez.logforge.format.LogFormatter;
 import codes.kevinhenriquez.logforge.format.MessageFormatter;
 import codes.kevinhenriquez.logforge.output.ConsoleWriter;
 import codes.kevinhenriquez.logforge.task.LogTask;
+import codes.kevinhenriquez.logforge.utils.AnsiColor.*;
+
+import static codes.kevinhenriquez.logforge.utils.AnsiColor.*;
 
 /*
  * © 2026 ComandaGo. All rights reserved.
@@ -96,7 +99,18 @@ public class LogForge {
     }
 
     public static void api(String method, String path, int status, long durationMs) {
-        log(LogLevelEnum.API, "{} {} {} {}ms", method, path, status, durationMs);
+        String statusColor = status >= 500
+                ? BRIGHT_RED
+                : status >= 400
+                ? BRIGHT_YELLOW
+                : BRIGHT_GREEN;
+
+        String message = BOLD + method + RESET
+                + " " + path
+                + " " + statusColor + status + RESET
+                + " " + GRAY + durationMs + "ms" + RESET;
+
+        log(LogLevelEnum.API, message);
     }
 
     public static void time(String label, LogTask task) {
