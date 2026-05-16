@@ -17,6 +17,8 @@ It provides beautiful terminal logs, ANSI colors, placeholder formatting, API re
 
 ## Preview
 
+![LogForge Preview](assets/preview.png)
+
 ```txt
 ✓ SUCCESS 03:40:23 Server started on port 8080
 ⚠ WARNING 03:40:23 User kevin tried to access /admin
@@ -30,7 +32,7 @@ java.lang.RuntimeException: Database unavailable
 For now, clone the repository and install it locally:
 
 ```bash
-git clone https://github.com/DevKevinggg/logforge.git
+git clone https://github.com/DevKevingg/LogForge.git
 cd logforge
 mvn clean install
 ```
