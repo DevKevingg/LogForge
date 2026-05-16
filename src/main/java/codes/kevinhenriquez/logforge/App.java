@@ -9,11 +9,12 @@ import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
  */
 public class App {
     public static void main(String[] args) {
-        LogForgeConfig.setEnabled(false);
-
-        LogForge.success("Esto no sale");
-        LogForge.error("Esto tampoco");
-
-        LogForgeConfig.reset();
+        LogForge.table(
+                new String[]{"ID", "User", "Role"},
+                new String[][]{
+                        {"1", "Kevin", "Admin"},
+                        {"2", "Kevin", "User"},
+                })
+        ;
     }
 }

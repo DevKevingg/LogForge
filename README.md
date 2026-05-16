@@ -1,7 +1,5 @@
 # LogForge
 
-# LogForge
-
 ![Java](https://img.shields.io/badge/Java-17-orange)
 ![Maven](https://img.shields.io/badge/Maven-Build-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
@@ -23,6 +21,9 @@ It provides beautiful terminal logs, ANSI colors, placeholder formatting, API re
 - Execution timer utility
 - Lightweight Java library
 - Simple static API
+- Configurable logger settings
+- Log level filtering
+- Console table support
 
 ## Preview
 
@@ -42,7 +43,7 @@ For now, clone the repository and install it locally:
 
 ```bash
 git clone https://github.com/DevKevingg/LogForge.git
-cd logforge
+cd LogForge
 mvn clean install
 ```
 
@@ -64,16 +65,30 @@ import codes.kevinhenriquez.logforge.LogForge;
 public class App {
 
     public static void main(String[] args) {
+
         LogForge.success("Server started on port {}", 8080);
 
-        LogForge.warning("User {} tried to access {}", "kevin", "/admin");
+        LogForge.warning(
+                "User {} tried to access {}",
+                "kevin",
+                "/admin"
+        );
 
-        LogForge.api("POST", "/api/orders", 201, 42);
+        LogForge.api(
+                "POST",
+                "/api/orders",
+                201,
+                42
+        );
 
         try {
             throw new RuntimeException("Database unavailable");
         } catch (Exception exception) {
-            LogForge.error("Failed to connect to {}", exception, "PostgreSQL");
+            LogForge.error(
+                    "Failed to connect to {}",
+                    exception,
+                    "PostgreSQL"
+            );
         }
 
         LogForge.time("Load users", () -> {
@@ -81,6 +96,46 @@ public class App {
         });
     }
 }
+```
+
+## Configuration
+
+```java
+import codes.kevinhenriquez.logforge.config.LogForgeConfig;
+import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
+
+LogForgeConfig.setColorsEnabled(false);
+
+LogForgeConfig.setIconsEnabled(false);
+
+LogForgeConfig.setTimestampEnabled(false);
+
+LogForgeConfig.setMinimumLevel(LogLevelEnum.WARNING);
+
+LogForgeConfig.setEnabled(false);
+
+LogForgeConfig.reset();
+```
+
+## Table Support
+
+```java
+LogForge.table(
+        new String[]{"ID", "User", "Role"},
+        new String[][]{
+                {"1", "Kevin", "Admin"},
+                {"2", "Alex", "User"}
+        }
+);
+```
+
+```txt
+┌────┬────────┬───────┐
+│ ID │ User   │ Role  │
+├────┼────────┼───────┤
+│ 1  │ Kevin  │ Admin │
+│ 2  │ Alex   │ User  │
+└────┴────────┴───────┘
 ```
 
 ## Available Methods
@@ -103,6 +158,13 @@ LogForge.error("Failed to connect to {}", exception, "PostgreSQL");
 LogForge.time("Load users", () -> {
     Thread.sleep(250);
 });
+
+LogForge.table(
+        new String[]{"ID", "User"},
+        new String[][]{
+                {"1", "Kevin"}
+        }
+);
 ```
 
 ## Requirements
@@ -123,15 +185,15 @@ Current version:
 ## Roadmap
 
 - Configurable themes
-- Disable ANSI colors
-- Disable icons
 - JSON log output
 - File writer support
 - Spring Boot starter
 - Request logging filter for Spring Boot apps
-- Log level filtering
 - Custom timestamp format
-- Unit tests for formatter and placeholders
+- Async logging support
+- File rotation support
+- Advanced table styling
+- More unit tests
 
 ## Contributing
 

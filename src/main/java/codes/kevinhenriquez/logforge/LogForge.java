@@ -5,6 +5,7 @@ import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
 import codes.kevinhenriquez.logforge.format.LogFormatter;
 import codes.kevinhenriquez.logforge.format.MessageFormatter;
 import codes.kevinhenriquez.logforge.output.ConsoleWriter;
+import codes.kevinhenriquez.logforge.table.LogTableFormatter;
 import codes.kevinhenriquez.logforge.task.LogTask;
 import codes.kevinhenriquez.logforge.utils.AnsiColor.*;
 
@@ -26,6 +27,7 @@ import static codes.kevinhenriquez.logforge.utils.AnsiColor.*;
 public class LogForge {
     private static final ConsoleWriter WRITER = new ConsoleWriter();
     private static final LogFormatter FORMATTER = new LogFormatter();
+    private static final LogTableFormatter TABLE_FORMATTER = new LogTableFormatter();
 
     public static void info(String message, Object... args) {
         if (shouldSkip(LogLevelEnum.INFO)) {
@@ -171,5 +173,13 @@ public class LogForge {
     private static boolean shouldSkip(LogLevelEnum level) {
         return !LogForgeConfig.isEnabled()
                 || level.getPriority() < LogForgeConfig.getMinimumLevel().getPriority();
+    }
+
+    public static void table(String[] headers, String[][] rows) {
+        if (shouldSkip(LogLevelEnum.INFO)) {
+            return;
+        }
+
+        WRITER.writeLog(TABLE_FORMATTER.format(headers, rows));
     }
 }
