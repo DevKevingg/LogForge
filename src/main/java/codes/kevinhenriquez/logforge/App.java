@@ -1,6 +1,7 @@
 package codes.kevinhenriquez.logforge;
 
 import codes.kevinhenriquez.logforge.config.LogForgeConfig;
+import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
 
 /**
  * Hello world!
@@ -8,14 +9,14 @@ import codes.kevinhenriquez.logforge.config.LogForgeConfig;
  */
 public class App {
     public static void main(String[] args) {
-        LogForgeConfig.setColorsEnabled(false);
-        LogForgeConfig.setIconsEnabled(false);
-        LogForgeConfig.setTimestampEnabled(false);
+        LogForgeConfig.setMinimumLevel(LogLevelEnum.WARNING);
 
-        LogForge.success("Servidor iniciado en puerto {}", 8080);
+        LogForge.debug("Esto no debe salir");
+        LogForge.info("Esto tampoco");
+        LogForge.success("Esto tampoco");
+        LogForge.warning("Esto sí sale");
+        LogForge.error("Esto también sale");
 
         LogForgeConfig.reset();
-
-        LogForge.success("Configuración restaurada");
     }
 }

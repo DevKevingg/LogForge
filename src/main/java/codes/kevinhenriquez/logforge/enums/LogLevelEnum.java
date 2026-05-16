@@ -1,7 +1,10 @@
 package codes.kevinhenriquez.logforge.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /*
- * © 2026 ComandaGo. All rights reserved.
+ * © 2026 LogForge. All rights reserved.
  *
  * File              : LogLevelEnum.java
  * Author            : Kevin Henriquez
@@ -13,6 +16,16 @@ package codes.kevinhenriquez.logforge.enums;
  * from the author.
  * =============================================================================
  */
+@Getter
+@AllArgsConstructor
 public enum LogLevelEnum {
-    INFO, SUCCESS, WARNING, ERROR, DEBUG, API;
+    DEBUG("DEBUG", 10),
+    INFO("INFO", 20),
+    SUCCESS("SUCCESS", 25),
+    API("API", 30),
+    WARNING("WARNING", 40),
+    ERROR("ERROR", 50);
+
+    private final String label;
+    private final int priority;
 }

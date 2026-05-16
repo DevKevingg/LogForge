@@ -1,12 +1,13 @@
 package codes.kevinhenriquez.logforge.config;
 
+import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /*
- * © 2026 ComandaGo. All rights reserved.
+ * © 2026 LogForge. All rights reserved.
  *
  * File              : LogForgeConfig.java
  * Author            : Kevin Henriquez
@@ -35,6 +36,9 @@ public final class LogForgeConfig {
     @Getter
     private static int levelPadding = 7;
 
+    @Getter
+    private static LogLevelEnum minimumLevel = LogLevelEnum.DEBUG;
+
     public static void setLevelPadding(int levelPadding) {
         if (levelPadding < 0) {
             throw new IllegalArgumentException("Level padding is negative");
@@ -43,10 +47,19 @@ public final class LogForgeConfig {
         LogForgeConfig.levelPadding = Math.min(levelPadding, 20);
     }
 
+    public static void setMinimumLevel(LogLevelEnum minimumLevel) {
+        if (minimumLevel == null) {
+            throw new IllegalArgumentException("Minimum level is null");
+        }
+
+        LogForgeConfig.minimumLevel = minimumLevel;
+    }
+
     public static void reset() {
         colorsEnabled = true;
         timestampEnabled = true;
         iconsEnabled = true;
         levelPadding = 7;
+        minimumLevel = LogLevelEnum.DEBUG;
     }
 }

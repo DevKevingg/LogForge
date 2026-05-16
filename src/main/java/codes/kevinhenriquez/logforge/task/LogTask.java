@@ -1,7 +1,7 @@
 package codes.kevinhenriquez.logforge.task;
 
 /*
- * © 2026 ComandaGo. All rights reserved.
+ * © 2026 LogForge. All rights reserved.
  *
  * File              : LogTask.java
  * Author            : Kevin Henriquez

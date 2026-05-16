@@ -1,7 +1,7 @@
 package codes.kevinhenriquez.logforge.format;
 
 /*
- * © 2026 ComandaGo. All rights reserved.
+ * © 2026 LogForge. All rights reserved.
  *
  * File              : MessageFormatter.java
  * Author            : Kevin Henriquez

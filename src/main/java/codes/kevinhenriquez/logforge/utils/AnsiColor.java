@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /*
- * © 2026 ComandaGo. All rights reserved.
+ * © 2026 LogForge. All rights reserved.
  *
  * File              : AnsiColor.java
  * Author            : Kevin Henriquez

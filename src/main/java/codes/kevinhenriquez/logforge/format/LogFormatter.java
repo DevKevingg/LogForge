@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import static codes.kevinhenriquez.logforge.utils.AnsiColor.*;
 
 /*
- * © 2026 ComandaGo. All rights reserved.
+ * © 2026 LogForge. All rights reserved.
  *
  * File              : LogFormatter.java
  * Author            : Kevin Henriquez
