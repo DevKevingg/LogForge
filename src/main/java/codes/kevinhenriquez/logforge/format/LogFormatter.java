@@ -1,5 +1,6 @@
 package codes.kevinhenriquez.logforge.format;
 
+import codes.kevinhenriquez.logforge.config.LogForgeConfig;
 import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
 
 import java.time.LocalTime;
@@ -26,16 +27,18 @@ public class LogFormatter {
     public String format(LogLevelEnum level, String message) {
         String time = LocalTime.now().format(TIME_FORMATTER);
 
-        return color(level)
-                + icon(level)
-                + " "
-                + BOLD
-                + padding(level.name())
-                + RESET
-                + " "
-                + GRAY
-                + time
-                + RESET
+        String icon = LogForgeConfig.isIconsEnabled()
+                ? icon(level) + " "
+                : "";
+
+        String levelText = padding(level.name());
+
+        String timestamp = LogForgeConfig.isTimestampEnabled()
+                ? " " + GRAY + time + RESET
+                : "";
+
+        return applyColor(level, icon + BOLD + levelText + RESET)
+                + timestamp
                 + " "
                 + message;
     }
@@ -62,7 +65,19 @@ public class LogFormatter {
         };
     }
 
+    private String applyColor(LogLevelEnum level, String value) {
+        if (!LogForgeConfig.isColorsEnabled()) {
+            return stripAnsi(value);
+        }
+
+        return color(level) + value + RESET;
+    }
+
+    private String stripAnsi(String value) {
+        return value.replace("\\u001B\\[[;\\d]*m", "");
+    }
+
     private String padding(String value) {
-        return String.format("%-7s", value);
+        return String.format("%-" + LogForgeConfig.getLevelPadding() + "s", value);
     }
 }
