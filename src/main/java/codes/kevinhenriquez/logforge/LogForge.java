@@ -2,12 +2,13 @@ package codes.kevinhenriquez.logforge;
 
 import codes.kevinhenriquez.logforge.config.LogForgeConfig;
 import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
+import codes.kevinhenriquez.logforge.error.ErrorAnalyzer;
+import codes.kevinhenriquez.logforge.error.ErrorHint;
 import codes.kevinhenriquez.logforge.format.LogFormatter;
 import codes.kevinhenriquez.logforge.format.MessageFormatter;
 import codes.kevinhenriquez.logforge.output.ConsoleWriter;
 import codes.kevinhenriquez.logforge.table.LogTableFormatter;
 import codes.kevinhenriquez.logforge.task.LogTask;
-import codes.kevinhenriquez.logforge.utils.AnsiColor.*;
 
 import static codes.kevinhenriquez.logforge.utils.AnsiColor.*;
 
@@ -28,6 +29,7 @@ public class LogForge {
     private static final ConsoleWriter WRITER = new ConsoleWriter();
     private static final LogFormatter FORMATTER = new LogFormatter();
     private static final LogTableFormatter TABLE_FORMATTER = new LogTableFormatter();
+    private static final ErrorAnalyzer ERROR_ANALYZER = new ErrorAnalyzer();
 
     public static void info(String message, Object... args) {
         if (shouldSkip(LogLevelEnum.INFO)) {
@@ -123,6 +125,31 @@ public class LogForge {
                 MessageFormatter.format(message, args));
 
         WRITER.debugLog(formatted);
+    }
+
+    public static void explain(Throwable throwable) {
+        if (shouldSkip(LogLevelEnum.ERROR)) {
+            return;
+        }
+
+        ErrorHint hint = ERROR_ANALYZER.analyze(throwable);
+        String formatted = FORMATTER.format(LogLevelEnum.ERROR, hint.errorName());
+
+        WRITER.errorLog(formatted);
+        WRITER.errorLog("Location: " + hint.location());
+        WRITER.errorLog("");
+        if (hint.codeFrame().available()) {
+            WRITER.errorLog(hint.codeFrame().format());
+            WRITER.errorLog("");
+        }
+        WRITER.errorLog("Why:");
+        WRITER.errorLog(hint.reason());
+        WRITER.errorLog("");
+        WRITER.errorLog("Suggestion:");
+        WRITER.errorLog(hint.suggestion());
+        WRITER.errorLog("");
+        WRITER.errorLog("Possible fix:");
+        WRITER.errorLog(hint.exampleFix().stripTrailing());
     }
 
     private static void log(LogLevelEnum level, String message, Object... args) {

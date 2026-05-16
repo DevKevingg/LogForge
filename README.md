@@ -117,6 +117,39 @@ LogForgeConfig.setEnabled(false);
 LogForgeConfig.reset();
 ```
 
+## Error Hints
+
+```java
+try {
+    String value = null;
+    value.toLowerCase();
+} catch (Exception exception) {
+    LogForge.explain(exception);
+}
+```
+
+```txt
+✕ ERROR   18:20:31 NullPointerException
+Location: App.java:8
+
+Code:
+7 |     String value = null;
+8 |     value.toLowerCase();
+  | ^ failing line
+9 | }
+
+Why:
+A value is null and Java cannot call methods or access fields on it.
+
+Suggestion:
+Check the object before using it, initialize it, or validate the input before calling methods.
+
+Possible fix:
+if (value != null) {
+    value.toString();
+}
+```
+
 ## Table Support
 
 ```java
@@ -154,6 +187,8 @@ LogForge.api("GET", "/api/users", 200, 18);
 LogForge.error("Failed to connect");
 
 LogForge.error("Failed to connect to {}", exception, "PostgreSQL");
+
+LogForge.explain(exception);
 
 LogForge.time("Load users", () -> {
     Thread.sleep(250);
