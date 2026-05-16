@@ -1,5 +1,10 @@
 # LogForge
 
+![Java](https://img.shields.io/badge/Java-17-orange)
+![Maven](https://img.shields.io/badge/Maven-Build-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Status-Early%20Development-yellow)
+
 **LogForge** is a lightweight and clean console logging toolkit for Java applications.
 
 It provides beautiful terminal logs, ANSI colors, placeholder formatting, API request logs, exception tracing, API request helpers and execution timers without heavy dependencies.
