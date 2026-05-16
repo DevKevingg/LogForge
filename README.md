@@ -42,22 +42,22 @@ java.lang.RuntimeException: Database unavailable
 
 ## Installation
 
-For now, clone the repository and install it locally:
+Install LogForge from Maven Central:
+
+```xml
+<dependency>
+    <groupId>io.github.devkevingg</groupId>
+    <artifactId>logforge</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
+Or install it locally:
 
 ```bash
 git clone https://github.com/DevKevingg/LogForge.git
 cd LogForge
 mvn clean install
-```
-
-Then add LogForge to another Maven project:
-
-```xml
-<dependency>
-    <groupId>codes.kevinhenriquez</groupId>
-    <artifactId>logforge</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-</dependency>
 ```
 
 ## Usage

@@ -1,10 +1,6 @@
 package codes.kevinhenriquez.logforge.config;
 
 import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /*
  * © 2026 LogForge. All rights reserved.
@@ -19,29 +15,61 @@ import lombok.Setter;
  * from the author.
  * =============================================================================
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LogForgeConfig {
-    @Getter
-    @Setter
     private static boolean colorsEnabled = true;
 
-    @Getter
-    @Setter
     private static boolean timestampEnabled = true;
 
-    @Getter
-    @Setter
     private static boolean iconsEnabled = true;
 
-    @Getter
     private static int levelPadding = 7;
 
-    @Getter
     private static LogLevelEnum minimumLevel = LogLevelEnum.DEBUG;
 
-    @Getter
-    @Setter
     private static boolean enabled = true;
+
+    private LogForgeConfig() {
+    }
+
+    public static boolean isColorsEnabled() {
+        return colorsEnabled;
+    }
+
+    public static void setColorsEnabled(boolean colorsEnabled) {
+        LogForgeConfig.colorsEnabled = colorsEnabled;
+    }
+
+    public static boolean isTimestampEnabled() {
+        return timestampEnabled;
+    }
+
+    public static void setTimestampEnabled(boolean timestampEnabled) {
+        LogForgeConfig.timestampEnabled = timestampEnabled;
+    }
+
+    public static boolean isIconsEnabled() {
+        return iconsEnabled;
+    }
+
+    public static void setIconsEnabled(boolean iconsEnabled) {
+        LogForgeConfig.iconsEnabled = iconsEnabled;
+    }
+
+    public static int getLevelPadding() {
+        return levelPadding;
+    }
+
+    public static LogLevelEnum getMinimumLevel() {
+        return minimumLevel;
+    }
+
+    public static boolean isEnabled() {
+        return enabled;
+    }
+
+    public static void setEnabled(boolean enabled) {
+        LogForgeConfig.enabled = enabled;
+    }
 
     public static void setLevelPadding(int levelPadding) {
         if (levelPadding < 0) {

@@ -1,9 +1,5 @@
 package codes.kevinhenriquez.logforge.utils;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
 /*
  * © 2026 LogForge. All rights reserved.
  *
@@ -17,9 +13,6 @@ import lombok.Setter;
  * from the author.
  * =============================================================================
  */
-@Getter
-@Setter
-@AllArgsConstructor
 public class AnsiColor {
     public static final String RESET = "\u001B[0m";
 
@@ -40,4 +33,7 @@ public class AnsiColor {
 
     public static final String GRAY = "\u001B[90m";
     public static final String BOLD = "\u001B[1m";
+
+    private AnsiColor() {
+    }
 }
