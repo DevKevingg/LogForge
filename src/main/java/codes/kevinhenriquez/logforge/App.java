@@ -9,13 +9,10 @@ import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
  */
 public class App {
     public static void main(String[] args) {
-        LogForgeConfig.setMinimumLevel(LogLevelEnum.WARNING);
+        LogForgeConfig.setEnabled(false);
 
-        LogForge.debug("Esto no debe salir");
-        LogForge.info("Esto tampoco");
-        LogForge.success("Esto tampoco");
-        LogForge.warning("Esto sí sale");
-        LogForge.error("Esto también sale");
+        LogForge.success("Esto no sale");
+        LogForge.error("Esto tampoco");
 
         LogForgeConfig.reset();
     }

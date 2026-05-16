@@ -83,4 +83,11 @@ class LogForgeConfigTest {
                 () -> LogForgeConfig.setMinimumLevel(null)
         );
     }
+
+    @Test
+    void shouldDisableLogger() {
+        LogForgeConfig.setEnabled(false);
+
+        assertFalse(LogForgeConfig.isEnabled());
+    }
 }

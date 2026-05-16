@@ -39,6 +39,10 @@ public final class LogForgeConfig {
     @Getter
     private static LogLevelEnum minimumLevel = LogLevelEnum.DEBUG;
 
+    @Getter
+    @Setter
+    private static boolean enabled = true;
+
     public static void setLevelPadding(int levelPadding) {
         if (levelPadding < 0) {
             throw new IllegalArgumentException("Level padding is negative");
@@ -61,5 +65,6 @@ public final class LogForgeConfig {
         iconsEnabled = true;
         levelPadding = 7;
         minimumLevel = LogLevelEnum.DEBUG;
+        enabled = true;
     }
 }

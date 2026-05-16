@@ -28,7 +28,7 @@ public class LogForge {
     private static final LogFormatter FORMATTER = new LogFormatter();
 
     public static void info(String message, Object... args) {
-        if (!isLevelEnabled(LogLevelEnum.INFO)) {
+        if (shouldSkip(LogLevelEnum.INFO)) {
             return;
         }
 
@@ -36,7 +36,7 @@ public class LogForge {
     }
 
     public static void success(String message, Object... args) {
-        if (!isLevelEnabled(LogLevelEnum.SUCCESS)) {
+        if (shouldSkip(LogLevelEnum.SUCCESS)) {
             return;
         }
 
@@ -44,7 +44,7 @@ public class LogForge {
     }
 
     public static void warning(String message, Object... args) {
-        if (!isLevelEnabled(LogLevelEnum.WARNING)) {
+        if (shouldSkip(LogLevelEnum.WARNING)) {
             return;
         }
 
@@ -52,7 +52,7 @@ public class LogForge {
     }
 
     public static void error(String message, Object... args) {
-        if (!isLevelEnabled(LogLevelEnum.ERROR)) {
+        if (shouldSkip(LogLevelEnum.ERROR)) {
             return;
         }
 
@@ -64,7 +64,7 @@ public class LogForge {
     }
 
     public static void error(String message, Throwable throwable) {
-        if (!isLevelEnabled(LogLevelEnum.ERROR)) {
+        if (shouldSkip(LogLevelEnum.ERROR)) {
             return;
         }
 
@@ -80,7 +80,7 @@ public class LogForge {
     }
 
     public static void error(String message, Throwable throwable, Object... args) {
-        if (!isLevelEnabled(LogLevelEnum.ERROR)) {
+        if (shouldSkip(LogLevelEnum.ERROR)) {
             return;
         }
 
@@ -96,7 +96,7 @@ public class LogForge {
     }
 
     public static void error(Throwable throwable, String message, Object... args) {
-        if (!isLevelEnabled(LogLevelEnum.ERROR)) {
+        if (shouldSkip(LogLevelEnum.ERROR)) {
             return;
         }
 
@@ -112,7 +112,7 @@ public class LogForge {
     }
 
     public static void debug(String message, Object... args) {
-        if (!isLevelEnabled(LogLevelEnum.DEBUG)) {
+        if (shouldSkip(LogLevelEnum.DEBUG)) {
             return;
         }
 
@@ -124,7 +124,7 @@ public class LogForge {
     }
 
     private static void log(LogLevelEnum level, String message, Object... args) {
-        if (!isLevelEnabled(level)) {
+        if (shouldSkip(level)) {
             return;
         }
 
@@ -136,7 +136,7 @@ public class LogForge {
     }
 
     public static void api(String method, String path, int status, long durationMs) {
-        if (!isLevelEnabled(LogLevelEnum.API)) {
+        if (shouldSkip(LogLevelEnum.API)) {
             return;
         }
 
@@ -168,7 +168,8 @@ public class LogForge {
         }
     }
 
-    private static boolean isLevelEnabled(LogLevelEnum level) {
-        return level.getPriority() >= LogForgeConfig.getMinimumLevel().getPriority();
+    private static boolean shouldSkip(LogLevelEnum level) {
+        return !LogForgeConfig.isEnabled()
+                || level.getPriority() < LogForgeConfig.getMinimumLevel().getPriority();
     }
 }
