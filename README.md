@@ -1,9 +1,13 @@
 # LogForge
 
+# LogForge
+
 ![Java](https://img.shields.io/badge/Java-17-orange)
 ![Maven](https://img.shields.io/badge/Maven-Build-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Status](https://img.shields.io/badge/Status-Early%20Development-yellow)
+![GitHub repo size](https://img.shields.io/github/repo-size/DevKevingg/LogForge)
+![GitHub last commit](https://img.shields.io/github/last-commit/DevKevingg/LogForge)
 
 **LogForge** is a lightweight and clean console logging toolkit for Java applications.
 
