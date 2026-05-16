@@ -1,5 +1,6 @@
 # LogForge
 
+![Maven Central](https://img.shields.io/maven-central/v/io.github.devkevingg/logforge)
 ![Java](https://img.shields.io/badge/Java-17-orange)
 ![Maven](https://img.shields.io/badge/Maven-Build-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
@@ -219,7 +220,7 @@ LogForge is currently in early development.
 Current version:
 
 ```txt
-0.1.0-SNAPSHOT
+0.1.0
 ```
 
 ## Roadmap
