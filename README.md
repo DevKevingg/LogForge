@@ -7,12 +7,15 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/DevKevingg/LogForge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/DevKevingg/LogForge)
 
-**LogForge** is a lightweight and clean console logging toolkit for Java applications.
+**LogForge** is a modern Java logging toolkit focused on developer experience, readable console output and intelligent runtime error explanations.
 
-It provides beautiful terminal logs, ANSI colors, placeholder formatting, API request logs, exception tracing, API request helpers and execution timers without heavy dependencies.
+It provides beautiful terminal logs, ANSI colors, placeholder formatting, API request logs, exception tracing, source code frames, smart Java error hints and execution timers without heavy dependencies.
 
 ## Features
 
+- Smart Java error explanations
+- Source code frames for runtime exceptions
+- AI-style fix suggestions for common exceptions
 - Clean and readable console logs
 - ANSI colored output
 - Placeholder support using `{}`
@@ -98,26 +101,9 @@ public class App {
 }
 ```
 
-## Configuration
-
-```java
-import codes.kevinhenriquez.logforge.config.LogForgeConfig;
-import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
-
-LogForgeConfig.setColorsEnabled(false);
-
-LogForgeConfig.setIconsEnabled(false);
-
-LogForgeConfig.setTimestampEnabled(false);
-
-LogForgeConfig.setMinimumLevel(LogLevelEnum.WARNING);
-
-LogForgeConfig.setEnabled(false);
-
-LogForgeConfig.reset();
-```
-
 ## Error Hints
+
+LogForge can analyze common Java exceptions and provide human-readable explanations, source code frames and smart fix suggestions based on the failing line.
 
 ```java
 try {
@@ -146,8 +132,27 @@ Check the object before using it, initialize it, or validate the input before ca
 
 Possible fix:
 if (value != null) {
-    value.toString();
+    value.toLowerCase();
 }
+```
+
+## Configuration
+
+```java
+import codes.kevinhenriquez.logforge.config.LogForgeConfig;
+import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
+
+LogForgeConfig.setColorsEnabled(false);
+
+LogForgeConfig.setIconsEnabled(false);
+
+LogForgeConfig.setTimestampEnabled(false);
+
+LogForgeConfig.setMinimumLevel(LogLevelEnum.WARNING);
+
+LogForgeConfig.setEnabled(false);
+
+LogForgeConfig.reset();
 ```
 
 ## Table Support
@@ -156,10 +161,10 @@ if (value != null) {
 LogForge.table(
         new String[]{"ID", "User", "Role"},
         new String[][]{
-                {"1", "Kevin", "Admin"},
-                {"2", "Alex", "User"}
+        {"1", "Kevin", "Admin"},
+        {"2", "Alex", "User"}
         }
-);
+        );
 ```
 
 ```txt
@@ -191,15 +196,15 @@ LogForge.error("Failed to connect to {}", exception, "PostgreSQL");
 LogForge.explain(exception);
 
 LogForge.time("Load users", () -> {
-    Thread.sleep(250);
+        Thread.sleep(250);
 });
 
-LogForge.table(
+        LogForge.table(
         new String[]{"ID", "User"},
         new String[][]{
-                {"1", "Kevin"}
+        {"1", "Kevin"}
         }
-);
+        );
 ```
 
 ## Requirements
