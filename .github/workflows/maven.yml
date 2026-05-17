@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -25,4 +27,5 @@ jobs:
         run: mvn -B clean verify -Dgpg.skip=true
 
       - name: Upload Maven dependency graph
+        if: github.event_name == 'push'
         uses: advanced-security/maven-dependency-submission-action@v4
