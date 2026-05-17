@@ -110,6 +110,17 @@ class SmartSuggestionEngineTest {
         assertEquals("fallback", fix);
     }
 
+    @Test
+    void shouldKeepFallbackForAssignmentToAvoidUnsafeRewrite() {
+        String fix = engine.improve(
+                new NullPointerException(),
+                frame("String name = user.getName();"),
+                baseHint("fallback")
+        );
+
+        assertEquals("fallback", fix);
+    }
+
     private CodeFrame frame(String currentLine) {
         return new CodeFrame(true, 10, "", currentLine, "");
     }

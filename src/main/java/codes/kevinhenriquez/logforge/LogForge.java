@@ -31,100 +31,31 @@ public class LogForge {
     private static final LogTableFormatter TABLE_FORMATTER = new LogTableFormatter();
     private static final ErrorAnalyzer ERROR_ANALYZER = new ErrorAnalyzer();
 
-    public static void info(String message, Object... args) {
-        if (shouldSkip(LogLevelEnum.INFO)) {
-            return;
-        }
-
-        log(LogLevelEnum.INFO, MessageFormatter.format(message, args));
-    }
-
-    public static void success(String message, Object... args) {
-        if (shouldSkip(LogLevelEnum.SUCCESS)) {
-            return;
-        }
-
-        log(LogLevelEnum.SUCCESS, MessageFormatter.format(message, args));
-    }
-
-    public static void warning(String message, Object... args) {
-        if (shouldSkip(LogLevelEnum.WARNING)) {
-            return;
-        }
-
-        log(LogLevelEnum.WARNING, MessageFormatter.format(message, args));
-    }
+    public static void info(String message, Object... args) { write(LogLevelEnum.INFO, message, args); }
+    public static void success(String message, Object... args) { write(LogLevelEnum.SUCCESS, message, args); }
+    public static void warning(String message, Object... args) { write(LogLevelEnum.WARNING, message, args); }
+    public static void debug(String message, Object... args) { write(LogLevelEnum.DEBUG, message, args); }
 
     public static void error(String message, Object... args) {
         if (shouldSkip(LogLevelEnum.ERROR)) {
             return;
         }
-
-        String formatted = FORMATTER.format(
-                LogLevelEnum.ERROR,
-                MessageFormatter.format(message, args));
-
-        WRITER.errorLog(formatted);
+        WRITER.errorLog(FORMATTER.format(LogLevelEnum.ERROR, MessageFormatter.format(message, args)));
     }
 
     public static void error(String message, Throwable throwable) {
-        if (shouldSkip(LogLevelEnum.ERROR)) {
-            return;
-        }
-
-        String formatted = FORMATTER.format(
-                LogLevelEnum.ERROR,
-                MessageFormatter.format(message));
-
-        WRITER.errorLog(formatted);
-
-        if (throwable != null) {
-            throwable.printStackTrace(System.err);
-        }
+        error(message);
+        printThrowable(throwable);
     }
 
     public static void error(String message, Throwable throwable, Object... args) {
-        if (shouldSkip(LogLevelEnum.ERROR)) {
-            return;
-        }
-
-        String formatted = FORMATTER.format(
-                LogLevelEnum.ERROR,
-                MessageFormatter.format(message, args));
-
-        WRITER.errorLog(formatted);
-
-        if (throwable != null) {
-            throwable.printStackTrace(System.err);
-        }
+        error(message, args);
+        printThrowable(throwable);
     }
 
     public static void error(Throwable throwable, String message, Object... args) {
-        if (shouldSkip(LogLevelEnum.ERROR)) {
-            return;
-        }
-
-        String formatted = FORMATTER.format(
-                LogLevelEnum.ERROR,
-                MessageFormatter.format(message, args));
-
-        WRITER.errorLog(formatted);
-
-        if (throwable != null) {
-            throwable.printStackTrace(System.err);
-        }
-    }
-
-    public static void debug(String message, Object... args) {
-        if (shouldSkip(LogLevelEnum.DEBUG)) {
-            return;
-        }
-
-        String formatted = FORMATTER.format(
-                LogLevelEnum.DEBUG,
-                MessageFormatter.format(message, args));
-
-        WRITER.debugLog(formatted);
+        error(message, args);
+        printThrowable(throwable);
     }
 
     public static void explain(Throwable throwable) {
@@ -133,10 +64,15 @@ public class LogForge {
         }
 
         ErrorHint hint = ERROR_ANALYZER.analyze(throwable);
-        String formatted = FORMATTER.format(LogLevelEnum.ERROR, hint.errorName());
-
-        WRITER.errorLog(formatted);
+        WRITER.errorLog(FORMATTER.format(LogLevelEnum.ERROR, hint.errorName()));
         WRITER.errorLog("Location: " + hint.location());
+
+        if (LogForgeConfig.isCompactMode()) {
+            WRITER.errorLog("Why: " + hint.reason());
+            WRITER.errorLog("Suggestion: " + hint.suggestion());
+            return;
+        }
+
         WRITER.errorLog("");
         if (hint.codeFrame().available()) {
             WRITER.errorLog(hint.codeFrame().format());
@@ -152,61 +88,58 @@ public class LogForge {
         WRITER.errorLog(hint.exampleFix().stripTrailing());
     }
 
-    private static void log(LogLevelEnum level, String message, Object... args) {
-        if (shouldSkip(level)) {
-            return;
-        }
-
-        String formatted = FORMATTER.format(
-                level,
-                MessageFormatter.format(message, args));
-
-        WRITER.writeLog(formatted);
-    }
-
     public static void api(String method, String path, int status, long durationMs) {
         if (shouldSkip(LogLevelEnum.API)) {
             return;
         }
 
-        String statusColor = status >= 500
-                ? BRIGHT_RED
-                : status >= 400
-                ? BRIGHT_YELLOW
-                : BRIGHT_GREEN;
-
-        String message = BOLD + method + RESET
-                + " " + path
-                + " " + statusColor + status + RESET
-                + " " + GRAY + durationMs + "ms" + RESET;
-
-        log(LogLevelEnum.API, message);
+        String statusColor = status >= 500 ? BRIGHT_RED : status >= 400 ? BRIGHT_YELLOW : BRIGHT_GREEN;
+        String message = BOLD + method + RESET + " " + path + " " + statusColor + status + RESET + " " + GRAY + durationMs + "ms" + RESET;
+        write(LogLevelEnum.API, message);
     }
 
     public static void time(String label, LogTask task) {
         long start = System.currentTimeMillis();
-
         try {
             task.run();
-
-            long duration  = System.currentTimeMillis() - start;
-            success("{} completed in {}ms", label, duration);
-        } catch (Exception e) {
-            long duration  = System.currentTimeMillis() - start;
-            error("Error while running {} after {}ms", e, label, duration);
+            success("{} completed in {}ms", label, System.currentTimeMillis() - start);
+        } catch (Exception exception) {
+            error("Error while running {} after {}ms", exception, label, System.currentTimeMillis() - start);
         }
-    }
-
-    private static boolean shouldSkip(LogLevelEnum level) {
-        return !LogForgeConfig.isEnabled()
-                || level.getPriority() < LogForgeConfig.getMinimumLevel().getPriority();
     }
 
     public static void table(String[] headers, String[][] rows) {
-        if (shouldSkip(LogLevelEnum.INFO)) {
+        if (!shouldSkip(LogLevelEnum.INFO)) {
+            WRITER.writeLog(TABLE_FORMATTER.format(headers, rows));
+        }
+    }
+
+    private static void write(LogLevelEnum level, String message, Object... args) {
+        if (!shouldSkip(level)) {
+            String formatted = FORMATTER.format(level, MessageFormatter.format(message, args));
+            WRITER.writeLog(formatted);
+        }
+    }
+
+    private static void printThrowable(Throwable throwable) {
+        if (throwable == null || shouldSkip(LogLevelEnum.ERROR)) {
             return;
         }
+        WRITER.errorLog(throwable.getClass().getName() + formatMessage(throwable.getMessage()));
+        for (StackTraceElement element : throwable.getStackTrace()) {
+            WRITER.errorLog("  at " + element);
+        }
+        if (throwable.getCause() != null && throwable.getCause() != throwable) {
+            WRITER.errorLog("Caused by:");
+            printThrowable(throwable.getCause());
+        }
+    }
 
-        WRITER.writeLog(TABLE_FORMATTER.format(headers, rows));
+    private static String formatMessage(String message) {
+        return message == null || message.isBlank() ? "" : ": " + message;
+    }
+
+    private static boolean shouldSkip(LogLevelEnum level) {
+        return !LogForgeConfig.isEnabled() || level.getPriority() < LogForgeConfig.getMinimumLevel().getPriority();
     }
 }

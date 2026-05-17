@@ -4,7 +4,6 @@ import codes.kevinhenriquez.logforge.config.LogForgeConfig;
 import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 import static codes.kevinhenriquez.logforge.utils.AnsiColor.*;
 
@@ -22,20 +21,25 @@ import static codes.kevinhenriquez.logforge.utils.AnsiColor.*;
  * =============================================================================
  */
 public class LogFormatter {
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
-
     public String format(LogLevelEnum level, String message) {
-        String time = LocalTime.now().format(TIME_FORMATTER);
+        String time = LocalTime.now().format(LogForgeConfig.getTimestampFormatter());
 
         String icon = LogForgeConfig.isIconsEnabled()
                 ? icon(level) + " "
                 : "";
 
-        String levelText = padding(level.name());
-
         String timestamp = LogForgeConfig.isTimestampEnabled()
                 ? " " + GRAY + time + RESET
                 : "";
+
+        if (LogForgeConfig.isCompactMode()) {
+            return applyColor(level, icon + BOLD + level.name() + RESET)
+                    + timestamp
+                    + " "
+                    + message;
+        }
+
+        String levelText = padding(level.name());
 
         return applyColor(level, icon + BOLD + levelText + RESET)
                 + timestamp
@@ -44,6 +48,17 @@ public class LogFormatter {
     }
 
     private String icon(LogLevelEnum level) {
+        if (!LogForgeConfig.isUnicodeEnabled()) {
+            return switch (level) {
+                case INFO -> "i";
+                case SUCCESS -> "+";
+                case WARNING -> "!";
+                case ERROR -> "x";
+                case DEBUG -> ".";
+                case API -> ">";
+            };
+        }
+
         return switch (level) {
             case INFO -> "ℹ";
             case SUCCESS -> "✓";
@@ -55,13 +70,28 @@ public class LogFormatter {
     }
 
     private String color(LogLevelEnum level) {
-        return switch (level) {
-            case INFO -> BRIGHT_BLUE;
-            case SUCCESS -> BRIGHT_GREEN;
-            case WARNING -> BRIGHT_YELLOW;
-            case ERROR -> BRIGHT_RED;
-            case DEBUG -> GRAY;
-            case API -> BRIGHT_CYAN;
+        return switch (LogForgeConfig.getTheme()) {
+            case DEFAULT -> switch (level) {
+                case INFO -> BRIGHT_BLUE;
+                case SUCCESS -> BRIGHT_GREEN;
+                case WARNING -> BRIGHT_YELLOW;
+                case ERROR -> BRIGHT_RED;
+                case DEBUG -> GRAY;
+                case API -> BRIGHT_CYAN;
+            };
+            case MINIMAL -> switch (level) {
+                case INFO, SUCCESS, DEBUG, API -> GRAY;
+                case WARNING -> BRIGHT_YELLOW;
+                case ERROR -> BRIGHT_RED;
+            };
+            case HIGH_CONTRAST -> switch (level) {
+                case INFO -> BRIGHT_CYAN;
+                case SUCCESS -> BRIGHT_GREEN;
+                case WARNING -> BRIGHT_YELLOW;
+                case ERROR -> BRIGHT_RED;
+                case DEBUG -> BRIGHT_BLUE;
+                case API -> BRIGHT_MAGENTA;
+            };
         };
     }
 

@@ -29,6 +29,7 @@ public class AnsiColor {
     public static final String BRIGHT_GREEN = "\u001B[92m";
     public static final String BRIGHT_YELLOW = "\u001B[93m";
     public static final String BRIGHT_BLUE = "\u001B[94m";
+    public static final String BRIGHT_MAGENTA = "\u001B[95m";
     public static final String BRIGHT_CYAN = "\u001B[96m";
 
     public static final String GRAY = "\u001B[90m";

@@ -1,6 +1,7 @@
 package codes.kevinhenriquez.logforge;
 
 import codes.kevinhenriquez.logforge.config.LogForgeConfig;
+import codes.kevinhenriquez.logforge.config.Theme;
 import codes.kevinhenriquez.logforge.enums.LogLevelEnum;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -89,5 +90,18 @@ class LogForgeConfigTest {
         LogForgeConfig.setEnabled(false);
 
         assertFalse(LogForgeConfig.isEnabled());
+    }
+
+    @Test
+    void shouldSetCompactModeUnicodeTimestampAndTheme() {
+        LogForgeConfig.setCompactMode(true);
+        LogForgeConfig.setUnicodeEnabled(false);
+        LogForgeConfig.setTimestampPattern("HH:mm");
+        LogForgeConfig.setTheme(Theme.HIGH_CONTRAST);
+
+        assertTrue(LogForgeConfig.isCompactMode());
+        assertFalse(LogForgeConfig.isUnicodeEnabled());
+        assertEquals("HH:mm", LogForgeConfig.getTimestampPattern());
+        assertEquals(Theme.HIGH_CONTRAST, LogForgeConfig.getTheme());
     }
 }

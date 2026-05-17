@@ -35,6 +35,9 @@ public class SmartSuggestionEngine {
         }
 
         String line = codeFrame.currentLine().strip();
+        if (line.isBlank() || line.contains("=")) {
+            return baseHint.exampleFix();
+        }
 
         Optional<String> smartFix = Optional.empty();
         if (throwable instanceof NullPointerException) {
@@ -57,7 +60,6 @@ public class SmartSuggestionEngine {
         if (chainedMatcher.matches()) {
             String root = chainedMatcher.group(1);
             String nestedCall = chainedMatcher.group(2);
-
             return Optional.of("""
                     if (%s != null && %s.%s != null) {
                         %s
@@ -68,14 +70,12 @@ public class SmartSuggestionEngine {
         Matcher simpleMatcher = SIMPLE_METHOD_CALL.matcher(line);
         if (simpleMatcher.matches()) {
             String variable = simpleMatcher.group(1);
-
             return Optional.of("""
                     if (%s != null) {
                         %s
                     }
                     """.formatted(variable, line));
         }
-
         return Optional.empty();
     }
 
@@ -84,7 +84,6 @@ public class SmartSuggestionEngine {
         if (listMatcher.find()) {
             String list = listMatcher.group(1);
             String index = listMatcher.group(2).strip();
-
             return Optional.of("""
                     if (%s >= 0 && %s < %s.size()) {
                         %s
@@ -96,30 +95,25 @@ public class SmartSuggestionEngine {
         if (arrayMatcher.find()) {
             String array = arrayMatcher.group(1);
             String index = arrayMatcher.group(2).strip();
-
             return Optional.of("""
                     if (%s >= 0 && %s < %s.length) {
                         %s
                     }
                     """.formatted(index, index, array, line));
         }
-
         return Optional.empty();
     }
 
     private Optional<String> numberFormatFix(String line) {
-        Matcher matcher = NUMBER_PARSE.matcher(line);
-        if (!matcher.find()) {
-            return Optional.empty();
-        }
-
-        return Optional.of("""
+        return NUMBER_PARSE.matcher(line).find()
+                ? Optional.of("""
                 try {
                     %s
                 } catch (NumberFormatException exception) {
                     // handle invalid number
                 }
-                """.formatted(line));
+                """.formatted(line))
+                : Optional.empty();
     }
 
     private Optional<String> arithmeticFix(String line) {
@@ -127,9 +121,7 @@ public class SmartSuggestionEngine {
         if (!matcher.find()) {
             return Optional.empty();
         }
-
         String divisor = matcher.group(2);
-
         return Optional.of("""
                 if (%s != 0) {
                     int result = %s;
@@ -142,16 +134,13 @@ public class SmartSuggestionEngine {
         if (!matcher.matches()) {
             return Optional.empty();
         }
-
         String declaredType = matcher.group(1);
         String variable = matcher.group(2);
         String castType = matcher.group(3).strip();
         String object = matcher.group(4);
-
         if (!declaredType.equals(castType)) {
             return Optional.empty();
         }
-
         return Optional.of("""
                 if (%s instanceof %s %s) {
                     // use %s

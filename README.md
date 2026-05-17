@@ -49,7 +49,7 @@ Install LogForge from Maven Central:
 <dependency>
     <groupId>io.github.devkevingg</groupId>
     <artifactId>logforge</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -149,9 +149,23 @@ LogForgeConfig.setIconsEnabled(false);
 
 LogForgeConfig.setTimestampEnabled(false);
 
+LogForgeConfig.setTimestampPattern("HH:mm:ss.SSS");
+
 LogForgeConfig.setMinimumLevel(LogLevelEnum.WARNING);
 
+LogForgeConfig.setCompactMode(true);
+
+LogForgeConfig.setUnicodeEnabled(false);
+
+LogForgeConfig.setTheme(Theme.HIGH_CONTRAST);
+
 LogForgeConfig.setEnabled(false);
+
+LogForgeConfig.loadFromEnvironment();
+
+LogForgeConfig.loadFromFile(Path.of("logforge.properties"));
+
+LogForgeConfig.reload();
 
 LogForgeConfig.reset();
 ```
@@ -220,21 +234,20 @@ LogForge is currently in early development.
 Current version:
 
 ```txt
-0.1.0
+0.2.0
 ```
 
 ## Roadmap
 
 - Configurable themes
-- JSON log output
-- File writer support
-- Spring Boot starter
-- Request logging filter for Spring Boot apps
-- Custom timestamp format
-- Async logging support
-- File rotation support
-- Advanced table styling
-- More unit tests
+- Compact mode
+- Pretty multiline exceptions
+- Better table rendering
+- Unicode fallback mode
+- Custom timestamp formats
+- Environment-based configuration
+- External config file support
+- Runtime config reload
 
 ## Contributing
 

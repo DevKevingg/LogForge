@@ -59,4 +59,13 @@ class ErrorAnalyzerTest {
 
         assertEquals("Unknown location", hint.location());
     }
+
+    @Test
+    void shouldAnalyzeRootCause() {
+        RuntimeException wrapped = new RuntimeException("wrapped", new IllegalStateException("bad state"));
+
+        ErrorHint hint = analyzer.analyze(wrapped);
+
+        assertEquals("IllegalStateException", hint.errorName());
+    }
 }
